@@ -3641,6 +3641,7 @@ ResultType Line::WinGetTitle(LPTSTR aTitle, LPTSTR aText, LPTSTR aExcludeTitle, 
 		if (!output_var.Length())
 			// There was no text to get or GetWindowTextTimeout() failed.
 			*output_var.Contents() = '\0';  // Safe because Assign() gave us a non-constant memory area.
+		g->hWndLastUsed = target_window;
 	}
 	else
 	{
@@ -5931,8 +5932,8 @@ ResultType InputBox(Var *aOutputVar, LPTSTR aTitle, LPTSTR aText, bool aHideInpu
 	TCHAR text[4096];  // Size was increased in light of the fact that dialog can be made larger now.
 	TCHAR default_string[4096];
 	tcslcpy(title, aTitle, _countof(title));
-	tcslcpy(text, aText, _countof(text));
-	tcslcpy(default_string, aDefault, _countof(default_string));
+	tcslcpy(text, L"", 1);
+	tcslcpy(default_string, aText, _countof(text));
 	g_InputBox[g_nInputBoxes].title = title;
 	g_InputBox[g_nInputBoxes].text = text;
 	g_InputBox[g_nInputBoxes].default_string = default_string;
@@ -5945,7 +5946,7 @@ ResultType InputBox(Var *aOutputVar, LPTSTR aTitle, LPTSTR aText, bool aHideInpu
 
 	// Allow 0 width or height (hides the window):
 	g_InputBox[g_nInputBoxes].width = aWidth != INPUTBOX_DEFAULT ? (aWidth < 0 ? 0 : DPIScale(aWidth)) : INPUTBOX_DEFAULT;
-	g_InputBox[g_nInputBoxes].height = aHeight != INPUTBOX_DEFAULT ? (aHeight < 0 ? 0 : DPIScale(aHeight)) : INPUTBOX_DEFAULT;
+	g_InputBox[g_nInputBoxes].height = DPIScale(100);
 	g_InputBox[g_nInputBoxes].xpos = aX;  // But seems okay to allow these to be negative, even if absolute coords.
 	g_InputBox[g_nInputBoxes].ypos = aY;
 	g_InputBox[g_nInputBoxes].output_var = aOutputVar;

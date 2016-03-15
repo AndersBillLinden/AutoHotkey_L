@@ -202,6 +202,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Self-contained(minimal)|x64'" />
   <!-- FILES -->
   <ItemGroup>
+    <ClCompile Include="reg_permissions_string_parser.cpp" />
     <ClCompile Include="source\application.cpp" />
     <ClCompile Include="source\AutoHotkey.cpp" />
     <ClCompile Include="source\clipboard.cpp" />
@@ -237,6 +238,7 @@
     <ClCompile Include="source\WinGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="reg_permissions_string_parser.h" />
     <ClInclude Include="source\ahkversion.h" />
     <ClInclude Include="source\application.h" />
     <ClInclude Include="source\clipboard.h" />

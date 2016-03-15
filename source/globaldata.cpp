@@ -511,6 +511,8 @@ Action g_act[] =
 	, {_T("RegRead"), 1, 4, 4 H, NULL} // OutputVar, RegKey, RegSubkey, ValueName
 	, {_T("RegWrite"), 0, 5, 5, NULL} // ValueType, RegKey, RegSubKey, ValueName, Value (set to blank if omitted?)
 	, {_T("RegDelete"), 0, 3, 3, NULL} // RegKey, RegSubKey, ValueName
+	, {_T("RegKeyAddAccessRule"), 0, 3, 3, NULL} // RegKey, AccountName, Flags
+	, {_T("RegKeyDelAccessRule"), 0, 3, 3, NULL} // RegKey, AccountName, Flags
 	, {_T("SetRegView"), 1, 1, 1, NULL}
 
 	, {_T("OutputDebug"), 1, 1, 1, NULL}

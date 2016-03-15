@@ -169,6 +169,8 @@ enum CommandIDs {CONTROL_ID_FIRST = IDCANCEL + 1
 #define ERR_PARAM2_MUST_BE_BLANK _T("Parameter #2 must be blank in this case.")
 #define ERR_PARAM3_MUST_BE_BLANK _T("Parameter #3 must be blank in this case.")
 #define ERR_PARAM4_MUST_BE_BLANK _T("Parameter #4 must be blank in this case.")
+#define ERR_MISSING_REGISTRY_KEY = _T("The registry key is missing");
+#define ERR_NO_ACCESS_TO_REGISTRY_KEY = _T("Access to registry key is denied");
 #define ERR_MISSING_OUTPUT_VAR _T("Requires at least one of its output variables.")
 #define ERR_MISSING_OPEN_PAREN _T("Missing \"(\"")
 #define ERR_MISSING_OPEN_BRACE _T("Missing \"{\"")
@@ -664,6 +666,8 @@ private:
 	ResultType RegRead(HKEY aRootKey, LPTSTR aRegSubkey, LPTSTR aValueName);
 	ResultType RegWrite(DWORD aValueType, HKEY aRootKey, LPTSTR aRegSubkey, LPTSTR aValueName, LPTSTR aValue);
 	ResultType RegDelete(HKEY aRootKey, LPTSTR aRegSubkey, LPTSTR aValueName);
+	ResultType RegKeyAddAccessRule(HKEY aKey, LPSTR aAccount, LPSTR flags);
+	ResultType RegKeyDelAccessRule(HKEY aKey, LPSTR aAccount, LPSTR flags);
 	static LONG RegRemoveSubkeys(HKEY hRegKey);
 
 	#define DESTROY_SPLASH \
