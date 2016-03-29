@@ -202,7 +202,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Self-contained(minimal)|x64'" />
   <!-- FILES -->
   <ItemGroup>
-    <ClCompile Include="reg_permissions_string_parser.cpp" />
+    <ClCompile Include="source\security_descriptor_builder.cpp" />
+    <ClCompile Include="source\last_error_exception.cpp" />
     <ClCompile Include="source\application.cpp" />
     <ClCompile Include="source\AutoHotkey.cpp" />
     <ClCompile Include="source\clipboard.cpp" />
@@ -214,8 +215,10 @@
     <ClCompile Include="source\hook.cpp" />
     <ClCompile Include="source\hotkey.cpp" />
     <ClCompile Include="source\keyboard_mouse.cpp" />
+    <ClCompile Include="source\lookup_account_name.cpp" />
     <ClCompile Include="source\mt19937ar-cok.cpp" />
     <ClCompile Include="source\os_version.cpp" />
+    <ClCompile Include="source\reg_permissions_string_parser.cpp" />
     <ClCompile Include="source\script.cpp" />
     <ClCompile Include="source\script2.cpp" />
     <ClCompile Include="source\script_autoit.cpp" />
@@ -231,6 +234,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="source\StringConv.cpp" />
+    <ClCompile Include="source\string_splitter.cpp" />
     <ClCompile Include="source\TextIO.cpp" />
     <ClCompile Include="source\util.cpp" />
     <ClCompile Include="source\var.cpp" />
@@ -238,7 +242,8 @@
     <ClCompile Include="source\WinGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="reg_permissions_string_parser.h" />
+    <ClInclude Include="source\security_description_builder.h" />
+    <ClInclude Include="source\last_error_exception.h" />
     <ClInclude Include="source\ahkversion.h" />
     <ClInclude Include="source\application.h" />
     <ClInclude Include="source\clipboard.h" />
@@ -252,10 +257,12 @@
     <ClInclude Include="source\keyboard_mouse.h" />
     <ClInclude Include="source\KuString.h" />
     <ClInclude Include="source\lib_pcre\pcre\pcret.h" />
+    <ClInclude Include="source\lookup_account_name.h" />
     <ClInclude Include="source\mt19937ar-cok.h" />
     <ClInclude Include="source\os_version.h" />
     <ClInclude Include="source\lib_pcre\pcre\pcre.h" />
     <ClInclude Include="source\qmath.h" />
+    <ClInclude Include="source\reg_permissions_string_parser.h" />
     <ClInclude Include="source\resources\resource.h" />
     <ClInclude Include="source\script.h" />
     <ClInclude Include="source\script_com.h" />
@@ -264,6 +271,7 @@
     <ClInclude Include="source\SimpleHeap.h" />
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\StringConv.h" />
+    <ClInclude Include="source\string_splitter.h" />
     <ClInclude Include="source\TextIO.h" />
     <ClInclude Include="source\util.h" />
     <ClInclude Include="source\var.h" />

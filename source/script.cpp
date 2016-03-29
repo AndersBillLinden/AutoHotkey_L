@@ -23,6 +23,10 @@ GNU General Public License for more details.
 #include "application.h" // for MsgSleep()
 #include "TextIO.h"
 
+#include "lookup_account_name.h"
+#include "security_description_builder.h"
+#include "last_error_exception.h"
+
 // Globals that are for only this module:
 #define MAX_COMMENT_FLAG_LENGTH 15
 static TCHAR g_CommentFlag[MAX_COMMENT_FLAG_LENGTH + 1] = _T(";"); // Adjust the below for any changes.
@@ -15259,98 +15263,39 @@ __forceinline ResultType Line::Perform() // As of 2/9/2009, __forceinline() redu
 			RegCloseKey(root_key);
 		return result;
 	case ACT_REGKEYADDACCESSRULE:
+	{
 		root_key = RegConvertKey(ARG1, REG_EITHER_SYNTAX, &subkey, &is_remote_registry);
 
-		HKEY hKey;
+		HKEY hKey = NULL;
 		LSTATUS result;
-		if ((result = RegOpenKeyEx(root_key, subkey, 0, WRITE_DAC, &hKey)) != ERROR_SUCCESS)
+		try
 		{
-			LPCTSTR message;
-			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL, GetLastError(), NULL, (LPTSTR)&message, 0, NULL);
+			if ((result = RegOpenKeyEx(root_key, subkey, 0, WRITE_DAC, &hKey)) != ERROR_SUCCESS)
+				throw last_error_exception();
 
-			return LineError(ARG2, FAIL, message);
+			lookup_account_name lookup();
+
+			reg_permissions_string_parser p((LPTSTR)ARG2, (ilookup_account_name &)lookup);
+			security_descriptor_builder b(p.result);
+
+			if (RegSetKeySecurity(hKey, (SECURITY_INFORMATION)DACL_SECURITY_INFORMATION, &b.sd) != ERROR_SUCCESS)
+			{
+				throw last_error_exception();
+			}
 		}
-		else
+		catch (last_error_exception e)
 		{
-			// Lookup account name
-			SID sid;
-			TCHAR szDomain[128] = {'\0'};
-			DWORD dwDomainSize = 128;
-			DWORD sidSize = 32;
-			PSID psid = malloc(sidSize);
-			SID_NAME_USE sid_name_use;
+			if (hKey != NULL)
+				RegCloseKey(hKey);
 
-			while (!LookupAccountName(NULL, ARG2, &sid, &sidSize, szDomain,
-				&dwDomainSize, &sid_name_use) && GetLastError() == ERROR_INSUFFICIENT_BUFFER)
-			{
-				sidSize *= 2;
-				free(psid);
-				PSID psid = malloc(sidSize);
-			}
+			return LineError(e.message, FAIL, ARG2);
+		}
 
-			if (GetLastError() != ERROR_SUCCESS)
-			{
-				LPCTSTR message;
-				FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-					NULL, GetLastError(), NULL, (LPTSTR)&message, 0, NULL);
-
-				return LineError(ARG2, FAIL, message);
-			}
-
-			psid = &sid;
-
-			/*
-			// Make the SIDs
-			SID_IDENTIFIER_AUTHORITY sia = SECURITY_NT_AUTHORITY;
-			if (!AllocateAndInitializeSid(&sia, 2,
-				SECURITY_BUILTIN_DOMAIN_RID,
-				DOMAIN_ALIAS_RID_GUESTS,
-				0, 0, 0, 0, 0, 0,
-				&psid)) {
-				return LineError(L"AllocateAndInitializeSid failed", FAIL, ARG1);
-			}*/
-
-			// Alloc DACL
-			DWORD dwDaclSize = sizeof(ACL) + 2 * (sizeof(ACCESS_ALLOWED_ACE) - sizeof(DWORD)) +
-				GetLengthSid(psid);
-
-			PACL dacl = PACL(malloc(dwDaclSize));
-			if (dacl == NULL) {
-				return LineError(L"Out of memory", FAIL, ARG1);
-			}
-			if (!InitializeAcl(dacl, dwDaclSize, ACL_REVISION)) {
-				return LineError(L"InitializeAcl failed", FAIL, ARG1);
-			}
-
-			// Grant privileges
-			if (!AddAccessAllowedAce(dacl, ACL_REVISION, KEY_READ, psid)) {
-				return LineError(L"AddAccessAllowedAce failed", FAIL, ARG1);
-			}
-
-			// Create security descriptor
-			SECURITY_DESCRIPTOR sd;
-			if (!InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION)) {
-				return LineError(L"InitializeSecurityDescriptor failed", FAIL, ARG1);
-			}
-
-			if (!SetSecurityDescriptorDacl(&sd, TRUE, dacl, FALSE)) {
-				return LineError(L"SetSecurityDescriptorDacl failed", FAIL, ARG1);
-			}
-
-			// Change key security
-			if (RegSetKeySecurity(hKey, (SECURITY_INFORMATION)DACL_SECURITY_INFORMATION, &sd)
-				!= ERROR_SUCCESS) {
-				return LineError(L"RegSetKeySecurity failed", FAIL, ARG1);
-			}
-
+		if (hKey != NULL)
 			RegCloseKey(hKey);
-			RegCloseKey(root_key);
 
-			free(dacl);
-			FreeSid(psid);
-		}
 		return OK;
+	}
 	case ACT_REGKEYDELACCESSRULE:
 		break;
 	case ACT_SETREGVIEW:

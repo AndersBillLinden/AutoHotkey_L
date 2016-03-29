@@ -103,7 +103,19 @@
     <ClCompile Include="source\script_com.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="reg_permissions_string_parser.cpp">
+    <ClCompile Include="source\string_splitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\reg_permissions_string_parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lookup_account_name.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\security_descriptor_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\last_error_exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -198,7 +210,19 @@
     <ClInclude Include="source\script_func_impl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="reg_permissions_string_parser.h">
+    <ClInclude Include="source\string_splitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\reg_permissions_string_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lookup_account_name.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\security_description_builder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\last_error_exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,7 @@
 temp/
 bin/
 ipch/
+Debug/
 *.suo
 *.user
 *.ncb
